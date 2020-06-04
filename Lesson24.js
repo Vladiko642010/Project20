@@ -15,19 +15,18 @@
 'use strict';
 
 // Код возьмите из предыдущего домашнего задания
-let namberOfFilms;
 
 let personalMovieDB = {
-    count: namberOfFilms,
+    count: 0,
     movies: {},
     actors: {},
     genres: [],
     privat: false,
 
     start: function(){
-        namberOfFilms = +prompt ('Сколько фильмов вы уже просмотрели?', '');
+        personalMovieDB.count = +prompt ('Сколько фильмов вы уже просмотрели?', '');
     
-        while (namberOfFilms == '' || namberOfFilms == null || isNaN(namberOfFilms)){
+        while (personalMovieDB.count == '' || personalMovieDB.count == null || isNaN(personalMovieDB.count)){
             +prompt ('Сколько фильмов вы уже просмотрели?', '');
         }
     },
@@ -63,34 +62,36 @@ let personalMovieDB = {
 
         if (!hidden){
             console.log(personalMovieDB);
+            alert('прокатило');
         }
     },
         
-    writeYouGenres: function () {
-    
-        for (let i = 1; i <= 3; i++) {
-            personalMovieDB.genres[i - 1] = prompt(`Ваш любимый жанр под номером ${i}`);
-             //нумерация с нуля для записи в массив
+    toggleVisibleMyDB: function () {
+        if (personalMovieDB.privat){
+            personalMovieDB.privat = false; 
+        } else {
+            personalMovieDB.privat = true;
         }
     },
 
-    toggleVisibleMyDB: function () {
-        if (personalMovieDB.privat == false){
-            personalMovieDB.privat = true; 
-        } else {
-            personalMovieDB.privat = false;
+    writeYouGenres: function () {
+    
+        for (let i = 1; i <= 3; i++) {
+            let genre = prompt(`Ваш любимый жанр под номером ${i}`); 
+
+            if (genre == null || genre ==='') {
+                console.log('что то не так');
+                i--;
+            } else {
+                personalMovieDB.genres[i - 1] = genre;
+                //нумерация с нуля для записи в массив   
+            }
         }
-    }
+        personalMovieDB.genres.forEach((item, i) => {
+            console.log(`Любимый жанр ${i + 1} - это ${item}`);
+        });
+    },   
 
 };
 
-personalMovieDB.start();
-
-personalMovieDB.rememberMyFilms();
-
-personalMovieDB.detectPersonalLevel();
-
-personalMovieDB.showMyDB(personalMovieDB.privat);
-
-personalMovieDB.writeYouGenres();
 
