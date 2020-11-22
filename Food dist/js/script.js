@@ -210,7 +210,6 @@ window.addEventListener('DOMContentLoaded', () => {
     // Forms
 
     const forms = document.querySelectorAll('form');
-
     const message = {
         loading: 'img/form/spinner.svg',
         success: 'Спасибо! мы с Вами свяжемся',
@@ -233,10 +232,8 @@ window.addEventListener('DOMContentLoaded', () => {
             `;
             form.insertAdjacentElement('afterend', statusMessage);
 
-            const request = new XMLHttpRequest();
-            request.open('POST', 'server.php');
 
-            request.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+
             // отправка на сервер данных с помощью банального formData тогда request.send(formData);(как вариант1)
             const formData = new FormData(form);
 
@@ -245,22 +242,25 @@ window.addEventListener('DOMContentLoaded', () => {
             formData.forEach(function (value, key) {
                 object[key] = value;
             });
-            const json = JSON.stringify(object);
+            // const json = JSON.stringify(object);
 
-            request.send(json);
-
-            request.addEventListener('load', () => {
-                if (request.status === 200) {
-                    console.log(request.response);
-                    showThanksModal(message.success);
-                    console.log(message.success);
-                    statusMessage.remove();
-                    form.reset();
-                } else {
-                    showThanksModal(message.failure);
-                }
+            fetch('server.php', {
+                method: "POST",
+                headers: {
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(object)
+            })
+            .then(data => data.text())
+            .then(data => {
+                console.log(data);
+                showThanksModal(message.success);
+                statusMessage.remove();
+            }).catch(() => {
+                showThanksModal(message.failure);
+            }).finally(() => {
+                form.reset();
             });
-
         });
     }
 
@@ -278,7 +278,6 @@ window.addEventListener('DOMContentLoaded', () => {
         <div class="modal__title">${message}</div>
         </div>
         `;
-
         document.querySelector('.modal').append(thanksModal);
         setTimeout(() => {
             thanksModal.remove();
@@ -286,7 +285,5 @@ window.addEventListener('DOMContentLoaded', () => {
             prevModalDialog.classList.remove('hide');
             closeModal();
         }, 4000);
-
     }
-
 }); 
