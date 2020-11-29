@@ -1,6 +1,5 @@
 #https://help.github.com/articles/ignoring-files/  see more for gitignor
 
 /node_modules
-js/parser.js
 
-/package.json
+
