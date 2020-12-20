@@ -157,12 +157,14 @@ window.addEventListener('DOMContentLoaded', () => {
 
         render() {
             const element = document.createElement('div');
+
             if (this.classes.length === 0) {
                 this.classes = 'menu__item';
                 element.classList.add(this.classes);
             } else {
                 this.classes.forEach(className => element.classList.add(className));
             }
+
             element.innerHTML = `
                     <img src=${this.src} alt=${this.alt}>
                     <h3 class="menu__item-subtitle">${this.title}</h3>
@@ -178,12 +180,12 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 
 
-    getResource('http://localhost:3000/menu')
-        .then(data => {
-            data.forEach(({ img, altimg, title, descr, price }) => {
-                new MenuCard(img, altimg, title, descr, price, '.menu .container').render();
-            });
-        });
+    // getResource('http://localhost:3000/menu')
+    //     .then(data => {
+    //         data.forEach(({ img, altimg, title, descr, price }) => {
+    //             new MenuCard(img, altimg, title, descr, price, '.menu .container').render();
+    //         });
+    //     });
 
     // вариант организации верстки элементов через запрос к серверу без шаблонизации
 //     getResource('http://localhost:3000/menu')
@@ -209,6 +211,9 @@ window.addEventListener('DOMContentLoaded', () => {
 // document.querySelector('.menu .container').append(element);
 //         });
 //     }
+
+axios.get('http://localhost:3000/menu')
+.then(data => console.log(data));
 
     // Forms
 
@@ -243,7 +248,7 @@ window.addEventListener('DOMContentLoaded', () => {
         }
 
         return await res.json();
-    };
+    }
 
     function bindpostData(form) {
         form.addEventListener('submit', (e) => {
