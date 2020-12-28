@@ -180,40 +180,40 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 
 
-    // getResource('http://localhost:3000/menu')
-    //     .then(data => {
-    //         data.forEach(({ img, altimg, title, descr, price }) => {
-    //             new MenuCard(img, altimg, title, descr, price, '.menu .container').render();
-    //         });
-    //     });
+    getResource('http://localhost:3000/menu')
+        .then(data => {
+            data.forEach(({ img, altimg, title, descr, price }) => {
+                new MenuCard(img, altimg, title, descr, price, '.menu .container').render();
+            });
+        });
 
     // вариант организации верстки элементов через запрос к серверу без шаблонизации
-//     getResource('http://localhost:3000/menu')
-//         .then(data => createCard(data));
+    //     getResource('http://localhost:3000/menu')
+    //         .then(data => createCard(data));
 
-//     function createCard(data) {
-//         data.forEach(({ img, altimg, title, descr, price }) => {
-//             const element = document.createElement('div');
+    //     function createCard(data) {
+    //         data.forEach(({ img, altimg, title, descr, price }) => {
+    //             const element = document.createElement('div');
 
-//             element.classList.add('menu__item');
+    //             element.classList.add('menu__item');
 
-//             element.innerHTML = `
-//              <img src=${img} alt=${altimg}>
-//                     <h3 class="menu__item-subtitle">${title}</h3>
-//                     <div class="menu__item-descr">${descr}</div>
-//                     <div class="menu__item-divider"></div>
-//                     <div class="menu__item-price">
-//                         <div class="menu__item-cost">Цена:</div>
-//                     <div class="menu__item-total"><span>${price}</span> грн/день</div>
-//                     </div>
-//              `;
+    //             element.innerHTML = `
+    //              <img src=${img} alt=${altimg}>
+    //                     <h3 class="menu__item-subtitle">${title}</h3>
+    //                     <div class="menu__item-descr">${descr}</div>
+    //                     <div class="menu__item-divider"></div>
+    //                     <div class="menu__item-price">
+    //                         <div class="menu__item-cost">Цена:</div>
+    //                     <div class="menu__item-total"><span>${price}</span> грн/день</div>
+    //                     </div>
+    //              `;
 
-// document.querySelector('.menu .container').append(element);
-//         });
-//     }
+    // document.querySelector('.menu .container').append(element);
+    //         });
+    //     }
 
-axios.get('http://localhost:3000/menu')
-.then(data => console.log(data));
+    // axios.get('http://localhost:3000/menu')
+    // .then(data => console.log(data));
 
     // Forms
 
@@ -244,7 +244,7 @@ axios.get('http://localhost:3000/menu')
         let res = await fetch(url);
 
         if (!res.ok) {
-            throw new Error(`Could not fetch ${url}, status ${res.status}`);
+            throw new Error(`Could not fetch ${url}, status: ${res.status}`);
         }
 
         return await res.json();
@@ -309,7 +309,122 @@ axios.get('http://localhost:3000/menu')
         }, 4000);
     }
 
-    fetch('http://localhost:3000/menu')
-        .then(data => data.json())
-        .then(res => console.log(res));
+    // fetch('http://localhost:3000/menu')
+    //     .then(data => data.json())
+    //     .then(res => console.log(res));
+
+    // Slider
+
+    let slideIndex = 1;
+    const slides = document.querySelectorAll('.offer__slide'),
+        prev = document.querySelector('.offer__slider-prev'),
+        next = document.querySelector('.offer__slider-next'),
+        total = document.querySelector('#total'),
+        current = document.querySelector('#current'),
+        slidesWrapper = document.querySelector('.offer__slider-wrapper'),
+        slidesField = document.querySelectorAll('.offer__slider-inner'),
+        width = window.getComputedStyle(slidesWrapper).width;
+    let offset = 0;
+
+    if (slides.length < 10) {
+        total.textContent = `0${slides.length}`;
+        current.textContent = `0${slideIndex}`;
+    } else {
+        total.textContent = slides.length;
+        current.textContent = slideIndex;
+    }
+
+    slidesField.style.width = 100 * slides.length + '%';
+    slidesField.style.display = 'flex';
+    slidesField.style.transition = '0.5s all';
+
+
+    slidesWrapper.style.overflow = 'hidden';
+
+    slides.forEach(slide => {
+        slide.style.width = width;
+    });
+
+    next.addEventListener('click', () => {
+        if (offset == +width.slice(0, slides.length - 2) * (slides.length - 1)) {
+            offset = 0;
+        } else {
+            offset += +width.slice(0, slides.length - 2);
+        }
+
+        slidesField.style.transform = `translateX(-${offset}px)`;
+
+        if(slideIndex == slides.length){
+            slideIndex = 1;
+        }else {
+            slideIndex++;
+        }
+
+        if(slides.length < 10) {
+            current.textContent = `0${slideIndex}`;
+        }else{
+            current.textContent = slideIndex;
+        }
+    });
+
+    prev.addEventListener('click', () => {
+        if (offset == 0) {
+            offset = +width.slice(0, slides.length - 2) * (slides.length - 1);
+        } else {
+            offset -= +width.slice(0, slides.length - 2);
+        }
+
+        slidesField.style.transform = `translateX(-${offset}px)`;
+
+        if(slideIndex == 1){
+            slideIndex = slides.length;
+        }else {
+            slideIndex--;
+        }
+
+        if(slides.length < 10) {
+            current.textContent = `0${slideIndex}`;
+        }else{
+            current.textContent = slideIndex;
+        }
+    });
+
+    // showSlides(slideIndex);
+
+    // if (slides.length < 10) {
+    //     total.textContent = `0${slides.length}`;
+    // } else {
+    //     total.textContent = slides.length; 
+    // }
+
+    // function showSlides(n) {
+    //     if (n > slides.length) {
+    //         slideIndex = 1;
+    //     }
+    //     if (n < 1) {
+    //         slideIndex = slides.length;
+    //     }
+
+    //     slides.forEach((item) => item.style.display = 'none');
+
+    //     slides[slideIndex - 1].style.display = 'block';
+
+    //     if (slides.length < 10) {
+    //         current.textContent = `0${slideIndex}`;
+    //     } else {
+    //        current.textContent = slideIndex; 
+    //     }
+    // }
+
+    // function plusSlides(n) {
+    //     showSlides(slideIndex += n);
+    // }
+
+    // prev.addEventListener('click', function(){
+    //     plusSlides(-1);
+    // });
+
+    // next.addEventListener('click', function() {
+    //     plusSlides(1);
+    // });
 }); 
