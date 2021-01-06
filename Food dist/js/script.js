@@ -322,7 +322,7 @@ window.addEventListener('DOMContentLoaded', () => {
         total = document.querySelector('#total'),
         current = document.querySelector('#current'),
         slidesWrapper = document.querySelector('.offer__slider-wrapper'),
-        slidesField = document.querySelectorAll('.offer__slider-inner'),
+        slidesField = document.querySelector('.offer__slider-inner'),
         width = window.getComputedStyle(slidesWrapper).width;
     let offset = 0;
 
@@ -346,10 +346,10 @@ window.addEventListener('DOMContentLoaded', () => {
     });
 
     next.addEventListener('click', () => {
-        if (offset == +width.slice(0, slides.length - 2) * (slides.length - 1)) {
+        if (offset == (+width.slice(0, width.length - 2) * (slides.length - 1))) {
             offset = 0;
         } else {
-            offset += +width.slice(0, slides.length - 2);
+            offset += +width.slice(0, width.length - 2);
         }
 
         slidesField.style.transform = `translateX(-${offset}px)`;
@@ -369,9 +369,9 @@ window.addEventListener('DOMContentLoaded', () => {
 
     prev.addEventListener('click', () => {
         if (offset == 0) {
-            offset = +width.slice(0, slides.length - 2) * (slides.length - 1);
+            offset = +width.slice(0, width.length - 2) * (slides.length - 1);
         } else {
-            offset -= +width.slice(0, slides.length - 2);
+            offset -= +width.slice(0, width.length - 2);
         }
 
         slidesField.style.transform = `translateX(-${offset}px)`;
